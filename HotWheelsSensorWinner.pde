@@ -5,6 +5,8 @@
  * when a switch connected to a Wiring or Arduino board is pressed and released.
  * This example works with the Wiring / Arduino program that follows below.
  */
+ 
+ //tested working with MeshAlarm Arduino connected D1 mini
 
 
 import processing.serial.*;
@@ -15,26 +17,39 @@ int x = 0;
 void setup() 
 {
   size(200, 500);
-  // I know that the first port in the serial list on my mac
-  // is always my  FTDI adaptor, so I open Serial.list()[0].
-  // On Windows machines, this generally opens COM1.
-  // Open whatever port is the one you're using.
   //String portName = "/dev/ttyACM0";
   String portName = "/dev/ttyUSB0";
   myPort = new Serial(this, portName, 115200);
-    background(255);             // Set background to white
-
+    background(0, 255, 0);             // Set background to green
+    myPort.write("a"); //set engaged
+    println("Start");
 }
 
 void draw()
 {
+  //myPort.write("a");
   if ( myPort.available() > 0) {  // If data is available,
-    val = myPort.read();         // read it and store it in val
+    val = myPort.read(); // read it and store it in val
+    println(val);
+    if(val == 48){ //ascii 0
     background(255, 0, 0);
+    //delay(100);
+    //background(0, 255, 0);
+    myPort.write("a");
   } else {
-    background(0);
+    background(0, 0, 255);
+    //delay(100);
+    //background(0, 255, 0);
+    myPort.write("a");
     
   }
+  if(mousePressed){
+    background(0, 255, 0);
+    myPort.write("a"); //reset
+  }
+  }
+  
+  //old code:
 //  if (val == 0) {              // If the serial value is 0,
 //    fill(0);                   // set fill to black
 //  } 
