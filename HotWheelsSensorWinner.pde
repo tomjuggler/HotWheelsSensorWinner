@@ -10,43 +10,82 @@
 
 
 import processing.serial.*;
+import processing.sound.*;
+
+SoundFile lane1;
+SoundFile lane2;
+SoundFile start;
 
 Serial myPort;  // Create object from Serial class
 int val;      // Data received from the serial port
 int x = 0;
+
 void setup() 
 {
-  size(200, 500);
+  size(900, 500);
   //String portName = "/dev/ttyACM0";
   String portName = "/dev/ttyUSB0";
-  myPort = new Serial(this, portName, 115200);
+  myPort = new Serial(this, portName, 115200); 
+  
     background(0, 255, 0);             // Set background to green
     myPort.write("a"); //set engaged
     println("Start");
+    
+    lane1 = new SoundFile(this, "LANE1.wav");
+    lane2 = new SoundFile(this, "LANE2.wav");
+    start = new SoundFile(this, "startEngines.wav");
+    textSize(100);
+   
 }
 
+void keyPressed(){
+  if(key=='a'){
+    
+    //start.play();
+}
+}
 void draw()
 {
+  
+  if(mousePressed){
+     //start.play();
+    background(0, 255, 0);
+    text("START", width/2-width/6, height/2);
+    myPort.write("a"); //reset
+    println("mouse");
+    start.play();
+   
+  }
   //myPort.write("a");
   if ( myPort.available() > 0) {  // If data is available,
     val = myPort.read(); // read it and store it in val
     println(val);
     if(val == 48){ //ascii 0
     background(255, 0, 0);
+    text("WINNER: 1", width/2-width/6, height/2);
+    lane1.play();
     //delay(100);
     //background(0, 255, 0);
-    myPort.write("a");
+    //myPort.write("a");
+    
+    //delay(1000); //doesn't work, why?
+    //start.play();
+    //background(0, 255, 0);
+    //text("START", width/2-width/6, height/2);
   } else {
     background(0, 0, 255);
+    text("WINNER: 2", width/2-width/6, height/2);
+    lane2.play();
     //delay(100);
     //background(0, 255, 0);
-    myPort.write("a");
-    
+    //myPort.write("a");
+     
+    //delay(1000);
+    //start.play();
+    //background(0, 255, 0);
+    //text("START", width/2-width/6, height/2);
   }
-  if(mousePressed){
-    background(0, 255, 0);
-    myPort.write("a"); //reset
-  }
+  
   }
   
   //old code:
